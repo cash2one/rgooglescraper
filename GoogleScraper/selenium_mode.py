@@ -247,6 +247,7 @@ class SelScrape(SearchEngineScrape, threading.Thread):
                 self.webdriver = webdriver.Firefox(firefox_profile=profile)
             else:
                 self.webdriver = webdriver.Firefox()
+            self.webdriver.maximize_window()
             return True
         except WebDriverException as e:
             # reaching here is bad, since we have no available webdriver instance.
