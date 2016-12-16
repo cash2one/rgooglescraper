@@ -247,7 +247,6 @@ class SelScrape(SearchEngineScrape, threading.Thread):
                 self.webdriver = webdriver.Firefox(firefox_profile=profile)
             else:
                 self.webdriver = webdriver.Firefox()
-            self.webdriver.maximize_window()
             return True
         except WebDriverException as e:
             # reaching here is bad, since we have no available webdriver instance.
@@ -622,8 +621,9 @@ class SelScrape(SearchEngineScrape, threading.Thread):
             raise Exception('{}: Aborting due to no available selenium webdriver.'.format(self.name))
 
         try:
-            self.webdriver.set_window_size(400, 400)
-            self.webdriver.set_window_position(400 * (self.browser_num % 4), 400 * (math.floor(self.browser_num // 4)))
+            self.webdriver.maximize_window()
+            # self.webdriver.set_window_size(400, 400)
+            # self.webdriver.set_window_position(400 * (self.browser_num % 4), 400 * (math.floor(self.browser_num // 4)))
         except WebDriverException as e:
             logger.debug('Cannot set window size: {}'.format(e))
 
