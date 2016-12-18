@@ -137,6 +137,7 @@ def store_serp_result(serp, config):
                 serp['query'] = data['query']
                 serp['search_engine_name'] = data['search_engine_name']
                 serp['requested_at'] = data['requested_at']
+                serp['page_number'] = data['page_number']
                 serp['action'] = action_id
                 c_serp.insert(serp)
         if output_format == 'json':
