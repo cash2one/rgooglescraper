@@ -208,7 +208,7 @@ compressing_algorithm = 'gz'
 cachedir = '.scrapecache/'
 
 # After how many hours should the cache be cleaned
-clean_cache_after = 48
+clean_cache_after = 20
 
 # Sleeping ranges.
 # The scraper in selenium mode makes random modes every N seconds as specified in the given intervals.
