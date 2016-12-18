@@ -6,6 +6,8 @@ import json
 import pprint
 import logging
 from GoogleScraper.database import Link, SERP
+from pymongo import MongoClient
+from datetime import datetime
 
 """Stores SERP results in the appropriate output format.
 
@@ -14,11 +16,24 @@ Furthermore we cannot accumulate all results and then process them, because it w
 impossible to launch lang scrape jobs with millions of keywords.
 """
 
+connection = MongoClient("mongodb://192.168.0.21")
+db = connection.serank
+c_serp = db.serp
+c_action = db.action
+
+
 output_format = 'stdout'
 outfile = sys.stdout
 csv_fieldnames = sorted(set(Link.__table__.columns._data.keys() + SERP.__table__.columns._data.keys()) - {'id', 'serp_id'})
 
 logger = logging.getLogger(__name__)
+
+
+class JSONEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, ObjectId):
+            return str(o)
+        return json.JSONEncoder.default(self, o)
 
 
 class JsonStreamWriter():
@@ -107,13 +122,27 @@ def store_serp_result(serp, config):
 
     if outfile:
         data = row2dict(serp)
-        data['results'] = []
-        for link in serp.links:
-            data['results'].append(row2dict(link))
-
+        data['date'] = datetime.utcnow()
+        try:
+            action_id = c_action.insert(data)
+        except Exception as e:
+            action_id = False
+            print("Failed:", e)
+        # data['results'] = []
+        if action_id:
+            for link in serp.links:
+                # data['results'].append(row2dict(link))
+                serp = row2dict(link)
+                serp['date'] = datetime.utcnow()
+                serp['query'] = data['query']
+                serp['search_engine_name'] = data['search_engine_name']
+                serp['requested_at'] = data['requested_at']
+                serp['action'] = action_id
+                c_serp.insert(serp)
         if output_format == 'json':
             # The problem here is, that we need to stream write the json data.
-            outfile.write(data)
+            # outfile.write(data)
+            pass
         elif output_format == 'csv':
             outfile.write(data, serp)
         elif output_format == 'stdout':
