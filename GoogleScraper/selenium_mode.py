@@ -175,6 +175,8 @@ class SelScrape(SearchEngineScrape, threading.Thread):
         # else:
         #     logger.warning(status)
         if '<div style="background-size:272px 92px;height:92px;width:272px" title="Google" align="left" id="hplogo" onload="window.lol&amp;&amp;lol()"><div class="logo-subtext">España</div></div>' in self.webdriver.page_source:
+            ipinfo = self.proxy.host+":"+self.proxy.port
+            status = 'Proxy is working.'
             online = True
         else:
             logger.warning(status)
