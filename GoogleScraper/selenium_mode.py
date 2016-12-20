@@ -175,7 +175,7 @@ class SelScrape(SearchEngineScrape, threading.Thread):
         # else:
         #     logger.warning(status)
         if '<div style="background-size:272px 92px;height:92px;width:272px" title="Google" align="left" id="hplogo" onload="window.lol&amp;&amp;lol()"><div class="logo-subtext">España</div></div>' in self.webdriver.page_source:
-            ipinfo = self.proxy.host+":"+self.proxy.port
+            # ipinfo = self.proxy.host+":"+self.proxy.port
             status = 'Proxy is working.'
             online = True
         else:
@@ -461,8 +461,8 @@ class SelScrape(SearchEngineScrape, threading.Thread):
                 WebDriverWait(self.webdriver, 5).until(EC.element_to_be_clickable((By.CSS_SELECTOR, selector)))
             except (WebDriverException, TimeoutException) as e:
                 self._save_debug_screenshot()
-                raise Exception('{}: Cannot locate next page element: {}'.format(self.name, str(e)))
-                # print('!!!!SKIPPING!!!!  {}: Cannot locate next page element: {}'.format(self.name, str(e)))
+                # raise Exception('{}: Cannot locate next page element: {}'.format(self.name, str(e)))
+                print('!!!!SKIPPING!!!!  {}: Cannot locate next page element: {}'.format(self.name, str(e)))
 
             return self.webdriver.find_element_by_css_selector(selector)
 
@@ -502,13 +502,13 @@ class SelScrape(SearchEngineScrape, threading.Thread):
 
                 try:
                     WebDriverWait(self.webdriver, 5).\
-                        until(EC.text_to_be_present_in_element((By.CSS_SELECTOR, selector), str(self.page_number)))
+                        until(EC.text_to_be_present_in_element((By.CSS_SELECTOR, selector), str(self.page_number-1)))
                 except TimeoutException as e:
                     self._save_debug_screenshot()
                     content = self.webdriver.find_element_by_css_selector(selector).text
-                    raise Exception('Pagenumber={} did not appear in navigation. Got "{}" instead'\
-                                    .format(self.page_number, content))
-                    # print('!!!!SKIPPING!!!! Pagenumber={} did not appear in navigation. Got "{}" instead'.format(self.page_number, content))
+                    # raise Exception('Pagenumber={} did not appear in navigation. Got "{}" instead'\
+                    #                 .format(self.page_number, content))
+                    print('!!!!SKIPPING!!!! Pagenumber={} did not appear in navigation. Got "{}" instead'.format(self.page_number, content))
 
         elif self.search_type == 'image':
             self.wait_until_title_contains_keyword()
