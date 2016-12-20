@@ -505,12 +505,14 @@ class SelScrape(SearchEngineScrape, threading.Thread):
                         until(EC.text_to_be_present_in_element((By.CSS_SELECTOR, selector), str(self.page_number)))
                 except TimeoutException as e:
                     self._save_debug_screenshot()
-                    content = self.webdriver.find_element_by_css_selector(selector).text
-                    # raise Exception('Pagenumber={} did not appear in navigation. Got "{}" instead'\
-                    #                 .format(self.page_number, content))
-                    print ("lkjlkj", e)
-                    print('!!!!SKIPPING!!!! Pagenumber={} did not appear in navigation. Got "{}" instead'.format(self.page_number, content))
-
+                    self.webdriver.get_screenshot_as_png("out.png")
+                    try:
+                        content = self.webdriver.find_element_by_css_selector(selector).text
+                        # raise Exception('Pagenumber={} did not appear in navigation. Got "{}" instead'\
+                        #                 .format(self.page_number, content))
+                        print('*** ERROR: Pagenumber={} did not appear in navigation. Got "{}" instead'.format(self.page_number, content))
+                    except:
+                        print("*** PROBABLY CATCHA")
         elif self.search_type == 'image':
             self.wait_until_title_contains_keyword()
 
@@ -637,7 +639,7 @@ class SelScrape(SearchEngineScrape, threading.Thread):
             logger.debug('Cannot set window size: {}'.format(e))
 
         super().before_search()
-        print("***********************************", self.webdriver)
+
         if self.startable:
             self.build_search()
             self.search()
