@@ -155,23 +155,27 @@ class SelScrape(SearchEngineScrape, threading.Thread):
         assert self.proxy and self.webdriver, 'Scraper instance needs valid webdriver and proxy instance to make the proxy check'
 
         online = False
-        status = 'Proxy check failed: {host}:{port} is not used while requesting'.format(**self.proxy.__dict__)
+        status = 'Proxy check failed: {host}:{port} is not used while requesting'.format(host=self.proxy.host, port=self.proxy.port)
         ipinfo = {}
 
         try:
             self.webdriver.get(self.config.get('proxy_info_url'))
-            try:
-                text = re.search(r'(\{.*?\})', self.webdriver.page_source, flags=re.DOTALL).group(0)
-                ipinfo = json.loads(text)
-            except ValueError as v:
-                logger.critical(v)
-
+            # print("******", self.webdriver.page_source)
+            # try:
+            #     text = re.search(r'(\{.*?\})', self.webdriver.page_source, flags=re.DOTALL).group(0)
+            #     ipinfo = json.loads(text)
+            # except ValueError as v:
+            #     logger.critical(v)
         except Exception as e:
             status = str(e)
 
-        if 'ip' in ipinfo and ipinfo['ip']:
+        # if 'ip' in ipinfo and ipinfo['ip']:
+        #     online = True
+        #     status = 'Proxy is working.'
+        # else:
+        #     logger.warning(status)
+        if '<div style="background-size:272px 92px;height:92px;width:272px" title="Google" align="left" id="hplogo" onload="window.lol&amp;&amp;lol()"><div class="logo-subtext">España</div></div>' in self.webdriver.page_source:
             online = True
-            status = 'Proxy is working.'
         else:
             logger.warning(status)
 

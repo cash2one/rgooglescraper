@@ -185,7 +185,9 @@ clean_cache_files = False
 proxy_check_url = 'http://canihazip.com/s'
 
 # Proxy info url
-proxy_info_url = 'http://ipinfo.io/json'
+#proxy_info_url = 'http://ipinfo.io/json'
+proxy_info_url = 'http://google.es'
+# proxy_info_url = 'https://www.google.es/search?site=&source=hp&q=juguetes&oq=juguetes&gs_l=hp.3..0i131k1l3j0j0i131k1j0l2j0i131k1l2j0.119263.120743.0.123833.10.8.0.2.2.0.257.847.6j1j1.8.0....0...1c.1.64.hp..0.8.484.0.Hz8O6LEeBzU'
 
 # The basic search url
 # Default is google
