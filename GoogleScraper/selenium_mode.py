@@ -475,7 +475,7 @@ class SelScrape(SearchEngineScrape, threading.Thread):
             self.page_down()
             return True
 
-    def wait_until_serp_loaded(self):
+    def wait_until_serp_loaded(self, page_number):
         """
         This method tries to wait until the page requested is loaded.
 
@@ -505,6 +505,7 @@ class SelScrape(SearchEngineScrape, threading.Thread):
                 time.sleep(1.5)
             else:
                 try:
+                    print("**********-->", self.page_number)
                     WebDriverWait(self.webdriver, 5).\
                         until(EC.text_to_be_present_in_element((By.CSS_SELECTOR, selector), str(self.page_number)))
                 except TimeoutException as e:
@@ -524,6 +525,7 @@ class SelScrape(SearchEngineScrape, threading.Thread):
                             print("*** PROBABLY CAPTCHA - EXIT")
                     else:
                         # This is last page
+                        print("**********--", self.page_number)
                         pass
                     raise Exception('Pages number confusion')
         elif self.search_type == 'image':
@@ -603,8 +605,7 @@ class SelScrape(SearchEngineScrape, threading.Thread):
 
                 for self.page_number in self.pages_per_keyword:
 
-                    print("****************************************", self.pages_per_keyword)
-                    self.wait_until_serp_loaded()
+                    self.wait_until_serp_loaded(self.page_number)
 
                     try:
                         self.html = self.webdriver.execute_script('return document.body.innerHTML;')
