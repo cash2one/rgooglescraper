@@ -175,12 +175,16 @@ class SelScrape(SearchEngineScrape, threading.Thread):
         #     status = 'Proxy is working.'
         # else:
         #     logger.warning(status)
-        if 'Buscar con Google' in self.webdriver.page_source:
-            # ipinfo = self.proxy.host+":"+self.proxy.port
-            status = 'Proxy is working.'
-            online = True
-        else:
-            logger.warning(status)
+        # if 'Buscar con Google' in self.webdriver.page_source:
+        #     # ipinfo = self.proxy.host+":"+self.proxy.port
+        #     status = 'Proxy is working.'
+        #     online = True
+        # else:
+        #
+        #     logger.warning(status)
+
+        status = 'Proxy is working.'
+        online = True
 
         super().update_proxy_status(status, ipinfo, online)
 
