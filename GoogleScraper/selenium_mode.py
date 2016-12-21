@@ -613,57 +613,7 @@ class SelScrape(SearchEngineScrape, threading.Thread):
                             break
             else:
                 print("*** Can't start search from this point")
-                temp_page = 1
-                empty_visit = False
-                for self.page_number in self.pages_per_keyword:
-                    if not empty_visit:
-                        self.stored_page_number = self.page_number
-                        self.page_number = temp_page
-
-                    while self.page_number < self.stored_page_number :
-                        self.wait_until_serp_loaded(self.page_number)
-
-                        try:
-                            self.html = self.webdriver.execute_script('return document.body.innerHTML;')
-                        except WebDriverException as e:
-                            self.html = self.webdriver.page_source
-
-                        # super().after_search()
-
-                        # Click the next page link not when leaving the loop
-                        # in the next iteration.
-                        if self.page_number not in self.pages_per_keyword:
-                            next_url = self._goto_next_page()
-                            if next_url == "GoogleLast":
-                                print("*** Last Google Page")
-                                break
-
-                            if not next_url:
-                                break
-                        self.page_number += 1
-
-                    empty_visit = True
-                    self.wait_until_serp_loaded(self.page_number)
-
-                    try:
-                        self.html = self.webdriver.execute_script('return document.body.innerHTML;')
-                    except WebDriverException as e:
-                        self.html = self.webdriver.page_source
-
-                    super().after_search()
-
-                    # Click the next page link not when leaving the loop
-                    # in the next iteration.
-                    if self.page_number in self.pages_per_keyword:
-                        next_url = self._goto_next_page()
-                        if next_url == "GoogleLast":
-                            print("*** Last Google Page")
-                            break
-                        self.requested_at = datetime.datetime.utcnow()
-
-                        if not next_url:
-                            break
-                # pass
+                pass
 
 
     def page_down(self):

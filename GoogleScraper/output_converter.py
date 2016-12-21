@@ -7,7 +7,7 @@ import pprint
 import logging
 from GoogleScraper.database import Link, SERP
 from pymongo import MongoClient
-from datetime import datetime
+from datetime import datetime, date, time
 
 """Stores SERP results in the appropriate output format.
 
@@ -129,11 +129,13 @@ def store_serp_result(serp, config):
             action_id = False
             print("Failed:", e)
         # data['results'] = []
+        tdate = date.today()
+        ttime = time(0,0)
         if action_id:
             for link in serp.links:
                 # data['results'].append(row2dict(link))
                 serp = row2dict(link)
-                serp['date'] = datetime.utcnow()
+                serp['date'] = datetime.combine(tdate, ttime)
                 serp['query'] = data['query']
                 serp['search_engine_name'] = data['search_engine_name']
                 serp['requested_at'] = data['requested_at']
