@@ -409,7 +409,9 @@ class SelScrape(SearchEngineScrape, threading.Thread):
         """
         next_url = ''
         element = self._find_next_page_element()
-        next_url = None
+
+        if element == "GoogleLast":
+            return element
 
         if hasattr(element, 'click'):
             next_url = element.get_attribute('href')
@@ -450,7 +452,6 @@ class SelScrape(SearchEngineScrape, threading.Thread):
         """
         if self.search_type == 'normal':
             selector = self.next_page_selectors[self.search_engine_name]
-            ret = None
             try:
                 # wait until the next page link is clickable
                 WebDriverWait(self.webdriver, 5).until(EC.element_to_be_clickable((By.CSS_SELECTOR, selector)))
@@ -459,10 +460,10 @@ class SelScrape(SearchEngineScrape, threading.Thread):
                 google_next_marker = "background:url(/images/nav_logo242.png) no-repeat;background-position:-96px 0;width:45px"
                 if google_next_marker in self.webdriver.page_source:
                     print("**** GOOGLE LAST PAGE")
-                    ret = "GoogleLast"
+                    return "GoogleLast"
                 # raise Exception('{}: Cannot locate next page element: {}'.format(self.name, str(e)))
                 print('*** WARNING  {}: Cannot locate next page element: {}'.format(self.name, str(e)))
-                return ret
+                return None
             return self.webdriver.find_element_by_css_selector(selector)
 
         elif self.search_type == 'image':
