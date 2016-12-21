@@ -458,6 +458,7 @@ class SelScrape(SearchEngineScrape, threading.Thread):
                 google_next_marker = "background:url(/images/nav_logo242.png) no-repeat;background-position:-96px 0;width:45px"
                 if google_next_marker in self.webdriver.page_source:
                     print("**** GOOGLE LAST PAGE")
+                    return "GoogleLast"
                 # raise Exception('{}: Cannot locate next page element: {}'.format(self.name, str(e)))
                 print('*** WARNING  {}: Cannot locate next page element: {}'.format(self.name, str(e)))
                 return None
@@ -611,6 +612,9 @@ class SelScrape(SearchEngineScrape, threading.Thread):
                     # in the next iteration.
                     if self.page_number in self.pages_per_keyword:
                         next_url = self._goto_next_page()
+                        if next_url == "GoogleLast":
+                            print("LAAAAAAST")
+                            break
                         self.requested_at = datetime.datetime.utcnow()
 
                         if not next_url:
