@@ -612,6 +612,7 @@ class SelScrape(SearchEngineScrape, threading.Thread):
                     # in the next iteration.
                     if self.page_number in self.pages_per_keyword:
                         next_url = self._goto_next_page()
+                        print ("-----", next_url)
                         if next_url == "GoogleLast":
                             print("LAAAAAAST")
                             break
