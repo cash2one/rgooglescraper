@@ -459,7 +459,6 @@ class SelScrape(SearchEngineScrape, threading.Thread):
                 self._save_debug_screenshot()
                 google_next_marker = "background:url(/images/nav_logo242.png) no-repeat;background-position:-96px 0;width:45px"
                 if google_next_marker in self.webdriver.page_source:
-                    print("**** GOOGLE LAST PAGE")
                     return "GoogleLast"
                 # raise Exception('{}: Cannot locate next page element: {}'.format(self.name, str(e)))
                 print('*** WARNING  {}: Cannot locate next page element: {}'.format(self.name, str(e)))
@@ -500,29 +499,20 @@ class SelScrape(SearchEngineScrape, threading.Thread):
                 time.sleep(1.5)
             else:
                 try:
-                    print("**********-->", self.page_number)
                     WebDriverWait(self.webdriver, 5).\
                         until(EC.text_to_be_present_in_element((By.CSS_SELECTOR, selector), str(self.page_number)))
                 except TimeoutException as e:
-                    google_next_marker = "background:url(/images/nav_logo242.png) no-repeat;background-position:-96px 0;width:71px"
-                    if self.webdriver.page_source.contains(google_next_marker):
-                        print("**********ZNALAZLEM >>>****",)
-                        # Some error ocurred cause Next exist
-                        self._save_debug_screenshot()
-                        try:
-                            content = self.webdriver.find_element_by_css_selector(selector).text
-                            # raise Exception('Pagenumber={} did not appear in navigation. Got "{}" instead'\
-                            #                 .format(self.page_number, content))
-                            print('*** ERROR: Pagenumber={} did not appear in navigation. Got "{}" instead'.format(self.page_number, content))
-                            self.webdriver.get_screenshot_as_file(
-                                "./pagenumber-"+self.page_number+"-"+content+"-"+datetime.datetime.now().strftime("%Y%m%d-%H%M%S") + ".png")
-                        except:
-                            self.webdriver.get_screenshot_as_file("./captcha-"+datetime.datetime.now().strftime("%Y%m%d-%H%M%S")+".png")
-                            print("*** PROBABLY CAPTCHA - EXIT!")
-                    else:
-                        # This is last page
-                        print("**********--!", self.page_number)
-                        pass
+                    self._save_debug_screenshot()
+                    try:
+                        content = self.webdriver.find_element_by_css_selector(selector).text
+                        # raise Exception('Pagenumber={} did not appear in navigation. Got "{}" instead'\
+                        #                 .format(self.page_number, content))
+                        print('*** ERROR: Pagenumber={} did not appear in navigation. Got "{}" instead'.format(self.page_number, content))
+                        self.webdriver.get_screenshot_as_file(
+                            "./pagenumber-"+self.page_number+"-"+content+"-"+datetime.datetime.now().strftime("%Y%m%d-%H%M%S") + ".png")
+                    except:
+                        self.webdriver.get_screenshot_as_file("./captcha-"+datetime.datetime.now().strftime("%Y%m%d-%H%M%S")+".png")
+                        print("*** PROBABLY CAPTCHA - EXIT!")
                     raise Exception('Pages number confusion!')
         elif self.search_type == 'image':
             self.wait_until_title_contains_keyword()
@@ -614,9 +604,8 @@ class SelScrape(SearchEngineScrape, threading.Thread):
                     # in the next iteration.
                     if self.page_number in self.pages_per_keyword:
                         next_url = self._goto_next_page()
-                        print ("-----", next_url)
                         if next_url == "GoogleLast":
-                            print("LAAAAAAST")
+                            print("*** Last Google Page")
                             break
                         self.requested_at = datetime.datetime.utcnow()
 
@@ -624,7 +613,52 @@ class SelScrape(SearchEngineScrape, threading.Thread):
                             break
             else:
                 print("*** Can't start search from this point")
-                pass
+                temp_page = 1
+                for self.page_number in self.pages_per_keyword:
+                    while temp_page < self.page_number:
+                        actual_page = temp_page
+                        self.wait_until_serp_loaded(actual_page)
+
+                        try:
+                            self.html = self.webdriver.execute_script('return document.body.innerHTML;')
+                        except WebDriverException as e:
+                            self.html = self.webdriver.page_source
+
+                        # super().after_search()
+
+                        # Click the next page link not when leaving the loop
+                        # in the next iteration.
+                        if actual_page < self.pages_per_keyword.last:
+                            next_url = self._goto_next_page()
+                            if next_url == "GoogleLast":
+                                print("*** Last Google Page")
+                                break
+                            self.requested_at = datetime.datetime.utcnow()
+
+                            if not next_url:
+                                break
+                        ++temp_page
+                    self.wait_until_serp_loaded(self.page_number)
+
+                    try:
+                        self.html = self.webdriver.execute_script('return document.body.innerHTML;')
+                    except WebDriverException as e:
+                        self.html = self.webdriver.page_source
+
+                    super().after_search()
+
+                    # Click the next page link not when leaving the loop
+                    # in the next iteration.
+                    if self.page_number in self.pages_per_keyword:
+                        next_url = self._goto_next_page()
+                        if next_url == "GoogleLast":
+                            print("*** Last Google Page")
+                            break
+                        self.requested_at = datetime.datetime.utcnow()
+
+                        if not next_url:
+                            break
+                # pass
 
 
     def page_down(self):
