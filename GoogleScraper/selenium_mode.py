@@ -10,7 +10,6 @@ import math
 import re
 import sys
 import os
-from datetime import datetime
 
 try:
     from selenium import webdriver
@@ -474,7 +473,7 @@ class SelScrape(SearchEngineScrape, threading.Thread):
                     #                 .format(self.page_number, content))
                     print('*** ERROR: {}: Cannot locate next page element: {}'.format(self.name, str(e)))
                     self.webdriver.get_screenshot_as_file(
-                        "./can_not_locate_element-"+self.name+"-"+datetime.now().strftime("%Y%m%d-%H%M%S") + ".png")
+                        "./can_not_locate_element-"+self.name+"-"+datetime.datetime.now().strftime("%Y%m%d-%H%M%S") + ".png")
                     raise Exception('Pages number confusion')
                 except:
                     self.webdriver.get_screenshot_as_file(
