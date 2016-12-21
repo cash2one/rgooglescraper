@@ -529,7 +529,7 @@ class SelScrape(SearchEngineScrape, threading.Thread):
                             "./pagenumber-"+self.page_number+"-"+content+"-"+datetime.now().strftime("%Y%m%d-%H%M%S") + ".png")
                         raise Exception('Pages number confusion')
                     except:
-                        self.webdriver.get_screenshot_as_file("./captcha-"+datetime.now().strftime("%Y%m%d-%H%M%S")+".png")
+                        self.webdriver.get_screenshot_as_file("./captcha-"+datetime.datetime.now().strftime("%Y%m%d-%H%M%S")+".png")
                         print("*** PROBABLY CATCHA")
         elif self.search_type == 'image':
             self.wait_until_title_contains_keyword()
