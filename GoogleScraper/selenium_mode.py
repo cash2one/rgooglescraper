@@ -615,6 +615,8 @@ class SelScrape(SearchEngineScrape, threading.Thread):
                 print("*** Can't start search from this point")
                 temp_page = 1
                 for self.page_number in self.pages_per_keyword:
+                    print("----------------->", temp_page)
+                    print("----------------->", self.page_number)
                     while temp_page < self.page_number:
                         actual_page = temp_page
                         self.wait_until_serp_loaded(actual_page)
