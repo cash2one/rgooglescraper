@@ -618,7 +618,7 @@ class SelScrape(SearchEngineScrape, threading.Thread):
                     while temp_page < self.page_number:
                         actual_page = temp_page
                         self.wait_until_serp_loaded(actual_page)
-
+                        print("----------------->", actual_page)
                         try:
                             self.html = self.webdriver.execute_script('return document.body.innerHTML;')
                         except WebDriverException as e:
@@ -630,10 +630,10 @@ class SelScrape(SearchEngineScrape, threading.Thread):
                         # in the next iteration.
                         if actual_page < self.pages_per_keyword.last:
                             next_url = self._goto_next_page()
+                            print("----------------->", next_url)
                             if next_url == "GoogleLast":
                                 print("*** Last Google Page")
                                 break
-                            self.requested_at = datetime.datetime.utcnow()
 
                             if not next_url:
                                 break
