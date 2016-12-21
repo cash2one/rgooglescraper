@@ -160,30 +160,20 @@ class SelScrape(SearchEngineScrape, threading.Thread):
 
         try:
             self.webdriver.get(self.config.get('proxy_info_url'))
-            # print("******", self.webdriver.page_source)
-            # try:
-            #     text = re.search(r'(\{.*?\})', self.webdriver.page_source, flags=re.DOTALL).group(0)
-            #     ipinfo = json.loads(text)
-            # except ValueError as v:
-            #     logger.critical(v)
+            try:
+                text = re.search(r'(\{.*?\})', self.webdriver.page_source, flags=re.DOTALL).group(0)
+                ipinfo = json.loads(text)
+            except ValueError as v:
+                logger.critical(v)
+
         except Exception as e:
             status = str(e)
 
-        # if 'ip' in ipinfo and ipinfo['ip']:
-        #     online = True
-        #     status = 'Proxy is working.'
-        # else:
-        #     logger.warning(status)
-        # if 'Buscar con Google' in self.webdriver.page_source:
-        #     # ipinfo = self.proxy.host+":"+self.proxy.port
-        #     status = 'Proxy is working.'
-        #     online = True
-        # else:
-        #
-        #     logger.warning(status)
-
-        status = 'Proxy is working.'
-        online = True
+        if 'ip' in ipinfo and ipinfo['ip']:
+            online = True
+            status = 'Proxy is working.'
+        else:
+            logger.warning(status)
 
         super().update_proxy_status(status, ipinfo, online)
 
@@ -466,7 +456,7 @@ class SelScrape(SearchEngineScrape, threading.Thread):
             except (WebDriverException, TimeoutException) as e:
                 self._save_debug_screenshot()
                 # raise Exception('{}: Cannot locate next page element: {}'.format(self.name, str(e)))
-                print('!!!!SKIPPING!!!!  {}: Cannot locate next page element: {}'.format(self.name, str(e)))
+                print('*** ERROR  {}: Cannot locate next page element: {}'.format(self.name, str(e)))
                 try:
                     content = self.webdriver.find_element_by_css_selector(selector).text
                     # raise Exception('Pagenumber={} did not appear in navigation. Got "{}" instead'\
@@ -476,8 +466,8 @@ class SelScrape(SearchEngineScrape, threading.Thread):
                         "./can_not_locate_element-"+self.name+"-"+datetime.datetime.now().strftime("%Y%m%d-%H%M%S") + ".png")
                 except:
                     self.webdriver.get_screenshot_as_file(
-                        "./captcha-" + datetime.now().strftime("%Y%m%d-%H%M%S") + ".png")
-                    print("*** PROBABLY CATCHA")
+                        "./captcha-" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S") + ".png")
+                    print("*** PROBABLY CAPTCHA - EXIT")
                 raise Exception('Pages number confusion')
             return self.webdriver.find_element_by_css_selector(selector)
 
@@ -514,7 +504,6 @@ class SelScrape(SearchEngineScrape, threading.Thread):
             if self.search_engine_name == 'duckduckgo':
                 time.sleep(1.5)
             else:
-
                 try:
                     WebDriverWait(self.webdriver, 5).\
                         until(EC.text_to_be_present_in_element((By.CSS_SELECTOR, selector), str(self.page_number)))
@@ -526,10 +515,10 @@ class SelScrape(SearchEngineScrape, threading.Thread):
                         #                 .format(self.page_number, content))
                         print('*** ERROR: Pagenumber={} did not appear in navigation. Got "{}" instead'.format(self.page_number, content))
                         self.webdriver.get_screenshot_as_file(
-                            "./pagenumber-"+self.page_number+"-"+content+"-"+datetime.now().strftime("%Y%m%d-%H%M%S") + ".png")
+                            "./pagenumber-"+self.page_number+"-"+content+"-"+datetime.datetime.now().strftime("%Y%m%d-%H%M%S") + ".png")
                     except:
                         self.webdriver.get_screenshot_as_file("./captcha-"+datetime.datetime.now().strftime("%Y%m%d-%H%M%S")+".png")
-                        print("*** PROBABLY CATCHA")
+                        print("*** PROBABLY CAPTCHA - EXIT")
                     raise Exception('Pages number confusion')
         elif self.search_type == 'image':
             self.wait_until_title_contains_keyword()
@@ -648,7 +637,6 @@ class SelScrape(SearchEngineScrape, threading.Thread):
 
         if not self._get_webdriver():
             raise Exception('{}: Aborting due to no available selenium webdriver.'.format(self.name))
-
         try:
             self.webdriver.maximize_window()
             # self.webdriver.set_window_size(400, 400)

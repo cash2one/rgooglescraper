@@ -64,7 +64,7 @@ keyword_file = ''
 num_results_per_page = 10
 
 # How many pages should be requested for each single keyword
-num_pages_for_keyword = 1
+num_pages_for_keyword = 10
 
 # This arguments sets the number of browser instances for selenium mode or the number of worker threads in http mode.
 num_workers = 1
@@ -132,7 +132,7 @@ scrape_method = 'selenium'
 # If scraping with the own IP address should be allowed.
 # If this is set to False and you don't specify any proxies,
 # GoogleScraper cannot run.
-use_own_ip = True
+use_own_ip = False
 
 # Whether to check proxies before starting the scrape
 check_proxies = True
