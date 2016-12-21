@@ -10,6 +10,7 @@ import math
 import re
 import sys
 import os
+from datetime import datetime
 
 try:
     from selenium import webdriver
@@ -174,7 +175,7 @@ class SelScrape(SearchEngineScrape, threading.Thread):
         #     status = 'Proxy is working.'
         # else:
         #     logger.warning(status)
-        if '<input value="Buscar con Google" aria-label="Buscar con Google" name="btnK" type="submit" jsaction="sf.chk">' in self.webdriver.page_source:
+        if 'Buscar con Google' in self.webdriver.page_source:
             # ipinfo = self.proxy.host+":"+self.proxy.port
             status = 'Proxy is working.'
             online = True
