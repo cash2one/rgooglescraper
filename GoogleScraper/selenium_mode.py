@@ -597,26 +597,33 @@ class SelScrape(SearchEngineScrape, threading.Thread):
             super().detection_prevention_sleep()
             super().keyword_info()
 
-            for self.page_number in self.pages_per_keyword:
+            first_searched_page = self.pages_per_keyword[0]
 
-                print("****************************************", self.page_number)
-                self.wait_until_serp_loaded()
+            if first_searched_page == 1:
 
-                try:
-                    self.html = self.webdriver.execute_script('return document.body.innerHTML;')
-                except WebDriverException as e:
-                    self.html = self.webdriver.page_source
+                for self.page_number in self.pages_per_keyword:
 
-                super().after_search()
+                    print("****************************************", self.pages_per_keyword)
+                    self.wait_until_serp_loaded()
 
-                # Click the next page link not when leaving the loop
-                # in the next iteration.
-                if self.page_number in self.pages_per_keyword:
-                    next_url = self._goto_next_page()
-                    self.requested_at = datetime.datetime.utcnow()
+                    try:
+                        self.html = self.webdriver.execute_script('return document.body.innerHTML;')
+                    except WebDriverException as e:
+                        self.html = self.webdriver.page_source
 
-                    if not next_url:
-                        break
+                    super().after_search()
+
+                    # Click the next page link not when leaving the loop
+                    # in the next iteration.
+                    if self.page_number in self.pages_per_keyword:
+                        next_url = self._goto_next_page()
+                        self.requested_at = datetime.datetime.utcnow()
+
+                        if not next_url:
+                            break
+            else:
+                pass
+
 
     def page_down(self):
         """Scrolls down a page with javascript.
