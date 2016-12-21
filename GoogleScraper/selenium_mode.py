@@ -631,7 +631,7 @@ class SelScrape(SearchEngineScrape, threading.Thread):
 
                         # Click the next page link not when leaving the loop
                         # in the next iteration.
-                        if temp_page < self.pages_per_keyword.last:
+                        if self.page_number not in self.pages_per_keyword:
                             next_url = self._goto_next_page()
                             if next_url == "GoogleLast":
                                 print("*** Last Google Page")
