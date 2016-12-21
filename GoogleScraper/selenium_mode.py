@@ -409,7 +409,8 @@ class SelScrape(SearchEngineScrape, threading.Thread):
         """
         next_url = ''
         element = self._find_next_page_element()
-
+        next_url = None
+        print("*****************", element)
         if hasattr(element, 'click'):
             next_url = element.get_attribute('href')
             try:
@@ -434,7 +435,6 @@ class SelScrape(SearchEngineScrape, threading.Thread):
 
         # wait until the next page was loaded
 
-
         if not next_url:
             return False
         else:
@@ -458,17 +458,17 @@ class SelScrape(SearchEngineScrape, threading.Thread):
                 # raise Exception('{}: Cannot locate next page element: {}'.format(self.name, str(e)))
                 print('*** ERROR  {}: Cannot locate next page element: {}'.format(self.name, str(e)))
                 try:
-                    content = self.webdriver.find_element_by_css_selector(selector).text
+                    # content = self.webdriver.find_element_by_css_selector(selector).text
                     # raise Exception('Pagenumber={} did not appear in navigation. Got "{}" instead'\
                     #                 .format(self.page_number, content))
                     print('*** ERROR: {}: Cannot locate next page element: {}'.format(self.name, str(e)))
                     self.webdriver.get_screenshot_as_file(
-                        "./can_not_locate_element-"+self.name+"-"+datetime.datetime.now().strftime("%Y%m%d-%H%M%S") + ".png")
+                        "./can_not_locate_element-"+self.name+"-"+datetime.datetime.now().strftime("%Y%m%d-%H%M%S")+".png")
                 except:
                     self.webdriver.get_screenshot_as_file(
                         "./captcha-" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S") + ".png")
-                    print("*** PROBABLY CAPTCHA - EXIT")
-                raise Exception('Pages number confusion')
+                    print("*** NOT FOUND ELEMENT NEXT - EXIT")
+                return None
             return self.webdriver.find_element_by_css_selector(selector)
 
         elif self.search_type == 'image':
