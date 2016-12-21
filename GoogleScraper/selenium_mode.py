@@ -455,7 +455,7 @@ class SelScrape(SearchEngineScrape, threading.Thread):
                 WebDriverWait(self.webdriver, 5).until(EC.element_to_be_clickable((By.CSS_SELECTOR, selector)))
             except (WebDriverException, TimeoutException) as e:
                 self._save_debug_screenshot()
-                google_next_marker = "background:url(/images/nav_logo242.png) no-repeat;background-position:-96px 0;width:71px"
+                google_next_marker = "background:url(/images/nav_logo242.png) no-repeat;background-position:-96px 0;width:45px"
                 if google_next_marker in self.webdriver.page_source:
                     print("**** GOOGLE LAST PAGE")
                 # raise Exception('{}: Cannot locate next page element: {}'.format(self.name, str(e)))
