@@ -511,6 +511,7 @@ class SelScrape(SearchEngineScrape, threading.Thread):
                 except TimeoutException as e:
                     google_next_marker = "background:url(/images/nav_logo242.png) no-repeat;background-position:-96px 0;width:71px"
                     if self.webdriver.page_source.contains(google_next_marker):
+                        print("**********ZNALAZLEM >>>****",)
                         # Some error ocurred cause Next exist
                         self._save_debug_screenshot()
                         try:
@@ -522,12 +523,12 @@ class SelScrape(SearchEngineScrape, threading.Thread):
                                 "./pagenumber-"+self.page_number+"-"+content+"-"+datetime.datetime.now().strftime("%Y%m%d-%H%M%S") + ".png")
                         except:
                             self.webdriver.get_screenshot_as_file("./captcha-"+datetime.datetime.now().strftime("%Y%m%d-%H%M%S")+".png")
-                            print("*** PROBABLY CAPTCHA - EXIT")
+                            print("*** PROBABLY CAPTCHA - EXIT!")
                     else:
                         # This is last page
-                        print("**********--", self.page_number)
+                        print("**********--!", self.page_number)
                         pass
-                    raise Exception('Pages number confusion')
+                    raise Exception('Pages number confusion!')
         elif self.search_type == 'image':
             self.wait_until_title_contains_keyword()
 
