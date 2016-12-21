@@ -614,10 +614,11 @@ class SelScrape(SearchEngineScrape, threading.Thread):
             else:
                 print("*** Can't start search from this point")
                 temp_page = 1
-
+                empty_visit = False
                 for self.page_number in self.pages_per_keyword:
-                    self.stored_page_number = self.page_number
-                    self.page_number = temp_page
+                    if not empty_visit:
+                        self.stored_page_number = self.page_number
+                        self.page_number = temp_page
 
                     while self.page_number < self.stored_page_number :
                         self.wait_until_serp_loaded(self.page_number)
@@ -641,6 +642,7 @@ class SelScrape(SearchEngineScrape, threading.Thread):
                                 break
                         self.page_number += 1
 
+                    empty_visit = True
                     self.wait_until_serp_loaded(self.page_number)
 
                     try:
