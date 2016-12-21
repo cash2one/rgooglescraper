@@ -622,6 +622,7 @@ class SelScrape(SearchEngineScrape, threading.Thread):
                         if not next_url:
                             break
             else:
+                print("*** Can't start search from this point")
                 pass
 
 
