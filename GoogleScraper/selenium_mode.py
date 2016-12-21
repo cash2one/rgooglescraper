@@ -474,11 +474,11 @@ class SelScrape(SearchEngineScrape, threading.Thread):
                     print('*** ERROR: {}: Cannot locate next page element: {}'.format(self.name, str(e)))
                     self.webdriver.get_screenshot_as_file(
                         "./can_not_locate_element-"+self.name+"-"+datetime.datetime.now().strftime("%Y%m%d-%H%M%S") + ".png")
-                    raise Exception('Pages number confusion')
                 except:
                     self.webdriver.get_screenshot_as_file(
                         "./captcha-" + datetime.now().strftime("%Y%m%d-%H%M%S") + ".png")
                     print("*** PROBABLY CATCHA")
+                raise Exception('Pages number confusion')
             return self.webdriver.find_element_by_css_selector(selector)
 
         elif self.search_type == 'image':
@@ -527,10 +527,10 @@ class SelScrape(SearchEngineScrape, threading.Thread):
                         print('*** ERROR: Pagenumber={} did not appear in navigation. Got "{}" instead'.format(self.page_number, content))
                         self.webdriver.get_screenshot_as_file(
                             "./pagenumber-"+self.page_number+"-"+content+"-"+datetime.now().strftime("%Y%m%d-%H%M%S") + ".png")
-                        raise Exception('Pages number confusion')
                     except:
                         self.webdriver.get_screenshot_as_file("./captcha-"+datetime.datetime.now().strftime("%Y%m%d-%H%M%S")+".png")
                         print("*** PROBABLY CATCHA")
+                    raise Exception('Pages number confusion')
         elif self.search_type == 'image':
             self.wait_until_title_contains_keyword()
 
