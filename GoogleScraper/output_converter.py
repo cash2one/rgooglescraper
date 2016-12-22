@@ -121,16 +121,18 @@ def store_serp_result(serp, config):
     global outfile, output_format
 
     if outfile:
+        tdate = date.today()
+        ttime = time(0, 0)
         data = row2dict(serp)
-        data['date'] = datetime.utcnow()
+        data['date'] = datetime.combine(tdate, ttime)
         try:
             action_id = c_action.insert(data)
         except Exception as e:
             action_id = False
             print("Failed:", e)
         # data['results'] = []
-        tdate = date.today()
-        ttime = time(0,0)
+        db.action.dropIndex({"requested_at": -1, "query": -1, "status": -1}, {unique: true})
+        db.action.dropIndex({"requested_at": -1, "query": -1, "search_engine_name": -1}, {unique: true})
         if action_id:
             for link in serp.links:
                 # data['results'].append(row2dict(link))
