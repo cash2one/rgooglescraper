@@ -131,8 +131,6 @@ def store_serp_result(serp, config):
             action_id = False
             print("Failed:", e)
         # data['results'] = []
-        db.action.dropIndex({"requested_at": -1, "query": -1, "status": -1}, {unique: true})
-        db.action.dropIndex({"requested_at": -1, "query": -1, "search_engine_name": -1}, {unique: true})
         if action_id:
             for link in serp.links:
                 # data['results'].append(row2dict(link))
