@@ -16,7 +16,7 @@ Furthermore we cannot accumulate all results and then process them, because it w
 impossible to launch lang scrape jobs with millions of keywords.
 """
 
-connection = MongoClient("mongodb://192.168.0.21")
+connection = MongoClient("mongodb://94.23.253.40")
 db = connection.serank
 c_serp = db.serp
 c_action = db.action
